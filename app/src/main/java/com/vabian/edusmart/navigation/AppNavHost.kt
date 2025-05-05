@@ -3,6 +3,7 @@ package com.vabian.edusmart.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,14 +13,18 @@ import com.vabian.edusmart.data.UserDatabase
 import com.vabian.edusmart.repository.UserRepository
 import com.vabian.edusmart.ui.theme.screens.about.AboutScreen
 import com.vabian.edusmart.ui.theme.screens.contact.ContactScreen
+import com.vabian.edusmart.ui.theme.screens.dashboard.AdminDashboard
+import com.vabian.edusmart.ui.theme.screens.dashboard.DashboardScreen
 import com.vabian.edusmart.ui.theme.screens.home.HomeScreen
 import com.vabian.edusmart.ui.theme.screens.intent.IntentScreen
 import com.vabian.edusmart.ui.theme.screens.item.ItemScreen
+import com.vabian.edusmart.ui.theme.screens.more.MoreScreen
 import com.vabian.edusmart.ui.theme.screens.outh.LoginScreen
 import com.vabian.edusmart.ui.theme.screens.outh.RegisterScreen
 import com.vabian.edusmart.ui.theme.screens.outh.StudentRegisterScreen
 import com.vabian.edusmart.ui.theme.screens.splash.LoadingScreen
 import com.vabian.edusmart.ui.theme.screens.splash.SplashScreen
+import com.vabian.edusmart.ui.theme.screens.start.StartScreen
 import com.vabian.edusmart.viewmodel.AuthViewModel
 
 
@@ -68,9 +73,13 @@ fun AppNavHost(
         composable(ROUT_ITEM) {
             ItemScreen(navController)
         }
-        composable(ROUT_SERVICE) {
-            ServiceScreen(navController)
+        composable(ROUT_ADMINDASHBOARD) {
+            AdminDashboard(navController)
         }
+        composable(ROUT_STUDENT) {
+            StudentRegisterScreen(navController)
+        }
+
 
 
 
@@ -84,7 +93,7 @@ fun AppNavHost(
         val authViewModel: AuthViewModel = AuthViewModel(authRepository)
         composable(ROUT_REGISTER) {
             RegisterScreen(authViewModel, navController) {
-                navController.navigate(ROUT_STUDENT) {
+                navController.navigate(ROUT_LOGIN) {
                     popUpTo(ROUT_REGISTER) { inclusive = true }
                 }
             }
@@ -98,33 +107,8 @@ fun AppNavHost(
             }
         }
 
-        composable(ROUT_STUDENT) {
-            LoginScreen(authViewModel, navController) {
-                navController.navigate(ROUT_LOGIN) {
-                    popUpTo(ROUT_STUDENT) { inclusive = true }
-                }
-            }
-        }
+
 
     }
 }
 
-@Composable
-fun StartScreen(x0: NavHostController) {
-    TODO("Not yet implemented")
-}
-
-@Composable
-fun MoreScreen(x0: NavHostController) {
-    TODO("Not yet implemented")
-}
-
-@Composable
-fun ServiceScreen(x0: NavHostController) {
-    TODO("Not yet implemented")
-}
-
-@Composable
-fun DashboardScreen(x0: NavHostController) {
-    TODO("Not yet implemented")
-}

@@ -1,181 +1,263 @@
 package com.vabian.edusmart.ui.theme.screens.outh
 
-import android.annotation.SuppressLint
+import android.Manifest
+import android.app.Application
+import android.graphics.Bitmap
 import android.net.Uri
+import android.provider.MediaStore
+import android.util.Base64
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
-import com.vabian.edusmart.navigation.ROUT_LOGIN
-import com.vabian.edusmart.viewmodel.StudentViewModel
+import androidx.navigation.compose.rememberNavController
+import androidx.room.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.util.*
 
+// ---------------------- DATA MODEL & DB SETUP ------------------------
 
+@Entity(tableName = "students")
+data class Student(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val name: String,
+    val admissionNo: String,
+    val parentId: String,
+    val parentPhone: String,
+    val passportBase64: String
+)
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Dao
+interface StudentDao {
+    @Insert
+    suspend fun insert(student: Student)
 
+    @Query("SELECT * FROM students")
+    suspend fun getAll(): List<Student>
+}
 
-@SuppressLint("CoroutineCreationDuringComposition")
-@Composable
-fun StudentRegisterScreen(
-    navController: NavController,
-    viewModel: StudentViewModel = viewModel()
-) {
-    var fullName by remember { mutableStateOf("") }
-    var classLevel  by remember { mutableStateOf("classLevel") }
-    var passportUri by remember { mutableStateOf("passportUri") }
-    var admissionNumber by remember { mutableStateOf("admissionNumber") }
+@Database(entities = [Student::class], version = 1)
+abstract class StudentDatabase : RoomDatabase() {
+    abstract fun studentDao(): StudentDao
 
+    companion object {
+        @Volatile private var INSTANCE: StudentDatabase? = null
 
-    val classOptions = listOf("Form 1", "Form 2", "Form 3", "Form 4")
-    var expanded by remember { mutableStateOf(false) }
-
-    val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri ->
-        viewModel.updatePassport(uri)
-    }
-//////////
-    Text("Back to Login",
-        modifier = Modifier.clickable {
-            navController.navigate("login")
-        },
-        color = Color.Gray
-    )
-//////////
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
-        Text("Student Registration", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = fullName,
-            onValueChange = {
-                val it = ""
-                viewModel.updateFullName(it)
-            },
-            label = { ("Full Name") },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = admissionNumber,
-            onValueChange = {},
-            label = { ("Admission No.") },
-            readOnly = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            OutlinedTextField(
-                value = classLevel,
-                onValueChange = {},
-                label = { ("Class Level") },
-                readOnly = true,
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                classOptions.forEach {
-                    DropdownMenuItem(
-                        text = { Text(it) },
-                        onClick = {
-                            viewModel.updateClassLevel(it)
-                            expanded = false
-                        }
-                    )
-                }
+        fun getDatabase(context: android.content.Context): StudentDatabase {
+            return INSTANCE ?: synchronized(this) {
+                Room.databaseBuilder(
+                    context.applicationContext,
+                    StudentDatabase::class.java,
+                    "student_db"
+                ).build().also { INSTANCE = it }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("Upload Passport", fontSize = 14.sp)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Box(
-            modifier = Modifier
-                .size(100.dp)
-                .border(1.dp, Color.Gray)
-                .clickable { imagePicker.launch("image/*") },
-            contentAlignment = Alignment.Center
-        ) {
-            if (true) {
-                Image(
-                    painter = rememberAsyncImagePainter(passportUri),
-                    contentDescription = "Passport",
-                    modifier = Modifier.fillMaxSize()
-                )
-            } else {
-                Text("Tap to select")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-
-            onClick = {
-                viewModel.saveStudentData()
-                // navController.navigate("login") or show confirmation
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5))
-        ) {
-            Text("Register", color = Color.White)
-        }
-
-
-        TextButton(
-            onClick = { navController.navigate(ROUT_LOGIN) }
-        ) {
-            Text("Already student exist? Login")
-        }
-
     }
 }
 
+// ---------------------- VIEWMODEL ------------------------
+
+class StudentViewModel(application: Application) : AndroidViewModel(application) {
+    private val dao = StudentDatabase.getDatabase(application).studentDao()
+
+    fun registerStudent(student: Student) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.insert(student)
+        }
+    }
+}
+
+// ---------------------- UI SCREEN ------------------------
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun StudentRegisterScreen(navController: NavController) {
+    val context = LocalContext.current
+    val viewModel: StudentViewModel = ViewModelProvider(
+        LocalContext.current as androidx.lifecycle.ViewModelStoreOwner
+    )[StudentViewModel::class.java]
+
+    var name by remember { mutableStateOf("") }
+    var parentId by remember { mutableStateOf("") }
+    var parentPhone by remember { mutableStateOf("") }
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+        }
+    }
+
+    val admissionNumber = "ADM-${UUID.randomUUID().toString().substring(0, 6).uppercase()}"
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("Register New Student") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigate("home") }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF880E4F),
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White
+                )
+            )
+        },
+        bottomBar = {
+            NavigationBar(
+                containerColor = Color(0xFF880E4F),
+                contentColor = Color.White
+            ) {
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
+                    label = { Text("Home") },
+                    selected = false,
+                    onClick = { navController.navigate("home") }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
+                    label = { Text("Profile") },
+                    selected = false,
+                    onClick = { navController.navigate("profile") }
+                )
+            }
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Register New Student", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Student Name") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = parentId,
+                onValueChange = { parentId = it },
+                label = { Text("Parent ID Number") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = parentPhone,
+                onValueChange = { parentPhone = it },
+                label = { Text("Parent Phone Number") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text("Admission No: $admissionNumber", fontWeight = FontWeight.Medium)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .size(120.dp)
+                    .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                    .clickable { imagePickerLauncher.launch("image/*") },
+                contentAlignment = Alignment.Center
+            ) {
+                if (bitmap != null) {
+                    Image(bitmap = bitmap!!.asImageBitmap(), contentDescription = null)
+                } else {
+                    Text("Upload Photo", color = Color.Gray)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = {
+                    if (name.isNotEmpty() && parentId.isNotEmpty() && parentPhone.isNotEmpty() && bitmap != null) {
+                        val base64Photo = bitmapToBase64(bitmap!!)
+                        val student = Student(
+                            name = name,
+                            admissionNo = admissionNumber,
+                            parentId = parentId,
+                            parentPhone = parentPhone,
+                            passportBase64 = base64Photo
+                        )
+                        viewModel.registerStudent(student)
+                        name = ""
+                        parentId = ""
+                        parentPhone = ""
+                        bitmap = null
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF880E4F))
+            ) {
+                Text("Register Student", color = Color.White)
+            }
+
+            // Extra content section (e.g., Terms and Conditions, info, etc.)
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Text("By registering, you agree to our terms and conditions.", color = Color.Gray, fontSize = 12.sp)
+        }
+    }
+}
+
+// ---------------------- IMAGE TO BASE64 ------------------------
+
+fun bitmapToBase64(bitmap: Bitmap): String {
+    val outputStream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+    return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+}
+
+// ---------------------- PREVIEW ------------------------
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewStudentRegister() {
+    StudentRegisterScreen(navController = rememberNavController())
+}
