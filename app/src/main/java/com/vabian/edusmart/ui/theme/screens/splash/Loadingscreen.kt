@@ -49,7 +49,7 @@ fun LoadingScreen(navController: NavController) {
     ) {
         // Logo/Image
         Image(
-            painter = painterResource(id = R.drawable.edulogo), // Replace with your actual logo
+            painter = painterResource(id = R.drawable.waa), // Replace with your actual logo
             contentDescription = "App Logo",
             modifier = Modifier.size(120.dp)
         )
@@ -80,7 +80,7 @@ fun LoadingScreen(navController: NavController) {
             progress = progress,
             modifier = Modifier
                 .width(250.dp)
-                .height(8.dp),
+                .height(15.dp),
             color = Color.Black,
             trackColor = Color.White
         )

@@ -7,7 +7,7 @@ const val ROUT_CONTACT = "contact"
 const val ROUT_REGISTER = "register"
 const val ROUT_LOGIN = "login"
 
-const val ROUT_STUDENT = "student"
+
 const val ROUT_DASHBOARD = "dashboard"
 const val ROUT_ADMINDASHBOARD = "admindashboard"
 const val ROUT_SPLASH = "splash"
@@ -17,14 +17,22 @@ const val ROUT_MORE = "more"
 const val ROUT_INTENT = "intent"
 const val ROUT_SERVICE = "service"
 const val ROUT_ITEM = "item"
-const val COMPILED_CODE = "item"
+const val ROUT_PARENTDASHBOARD = "parent"
 
 
-//Products
+//Content
+const val ROUT_UPLOAD_CONTENT = "upload_content"
+const val ROUT_VIEW_CONTENT = "view_content"
 
-const val ROUT_ADD_PRODUCT = "add_product"
-const val ROUT_PRODUCT_LIST = "product_list"
-const val ROUT_EDIT_PRODUCT = "edit_product/{productId}"
+
+
+//student
+
+const val ROUT_ADD_STUDENT = "add_student"
+const val ROUT_STUDENT_LIST = "student_list"
+const val ROUT_EDIT_STUDENT = "edit_student/{admissionNumber}"
+
 
 // ✅ Helper function for navigation
-fun editProductRoute(productId: Int) = "edit_product/$productId"
+fun editStudentRoute(admissionNumber: Int) = "edit_student/$admissionNumber"
+

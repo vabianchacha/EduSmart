@@ -30,8 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.vabian.edusmart.R
 import com.vabian.edusmart.navigation.ROUT_ADMINDASHBOARD
-import com.vabian.edusmart.navigation.ROUT_PRODUCT_LIST
+import com.vabian.edusmart.navigation.ROUT_PARENTDASHBOARD
 import com.vabian.edusmart.navigation.ROUT_REGISTER
+import com.vabian.edusmart.navigation.ROUT_STUDENT_LIST
+import com.vabian.edusmart.navigation.ROUT_VIEW_CONTENT
 import com.vabian.edusmart.viewmodel.AuthViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -55,7 +57,7 @@ fun LoginScreen(
                 if (user.role == "admin") {
                     navController.navigate(ROUT_ADMINDASHBOARD)
                 } else {
-                    navController.navigate(ROUT_PRODUCT_LIST)
+                    navController.navigate(ROUT_PARENTDASHBOARD)
                 }
             }
         }
@@ -141,7 +143,7 @@ fun LoginScreen(
                         .height(50.dp)
                         .background(
                             brush = Brush.horizontalGradient(
-                                colors = listOf(Color(0xFF00C6FF), Color(0xFF0072FF))
+                                colors = listOf(Color(0xFF9DFF00), Color(0xFF65C93A))
                             ),
                             shape = RoundedCornerShape(12.dp)
                         ),

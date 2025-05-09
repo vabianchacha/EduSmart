@@ -1,5 +1,6 @@
 package com.vabian.edusmart.ui.theme.screens.dashboard
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -29,12 +30,13 @@ import com.vabian.edusmart.ui.theme.yellow
 import kotlinx.coroutines.launch
 
 
+@SuppressLint("AutoboxingStateCreation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(navController: NavController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,

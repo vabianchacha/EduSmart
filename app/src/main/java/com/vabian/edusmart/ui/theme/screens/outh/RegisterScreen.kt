@@ -1,15 +1,10 @@
 package com.vabian.edusmart.ui.theme.screens.outh
-import android.annotation.SuppressLint
+
+
+
+
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -58,9 +53,7 @@ import com.vabian.edusmart.R
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.vabian.edusmart.model.User
-import com.vabian.edusmart.navigation.ROUT_DASHBOARD
 import com.vabian.edusmart.navigation.ROUT_LOGIN
-import com.vabian.edusmart.navigation.ROUT_STUDENT
 import com.vabian.edusmart.viewmodel.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -228,7 +221,7 @@ fun RegisterScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0072FF))
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF33A93E))
                     ) {
                         Text("Register", color = Color.White, fontSize = 16.sp)
                     }
@@ -242,12 +235,6 @@ fun RegisterScreen(
                         Text("Already have an account? Login", color = Color.Gray)
                     }
 
-                    TextButton(
-                        onClick = { navController.navigate(ROUT_DASHBOARD) },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Register Student here!", color = Color.Gray)
-                    }
                 }
             }
         }

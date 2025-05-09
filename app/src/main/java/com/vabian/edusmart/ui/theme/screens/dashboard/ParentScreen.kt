@@ -24,17 +24,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vabian.edusmart.R
-import com.vabian.edusmart.navigation.ROUT_ADD_STUDENT
 import com.vabian.edusmart.navigation.ROUT_HOME
 import com.vabian.edusmart.navigation.ROUT_REGISTER
-import com.vabian.edusmart.navigation.ROUT_STUDENT_LIST
-import com.vabian.edusmart.navigation.ROUT_UPLOAD_CONTENT
 import com.vabian.edusmart.navigation.ROUT_VIEW_CONTENT
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminDashboard(navController: NavController) {
+fun ParentDashboard(navController: NavController) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     Scaffold(
@@ -90,7 +87,7 @@ fun AdminDashboard(navController: NavController) {
                     .fillMaxWidth()
                     .height(200.dp),
                 shape = RoundedCornerShape(30.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFCDDC39))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF277712))
             ) {
                 Column(
                     modifier = Modifier
@@ -100,7 +97,7 @@ fun AdminDashboard(navController: NavController) {
                     verticalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.edulogo),
+                        painter = painterResource(id = R.drawable.waa),
                         contentDescription = "Admin Logo",
                         modifier = Modifier
                             .size(100.dp)
@@ -109,14 +106,14 @@ fun AdminDashboard(navController: NavController) {
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = "Admin Dashboard",
+                        text = "Notification Messages",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
                         fontFamily = FontFamily.Serif
                     )
                     Text(
-                        text = "Manage Students • Fees • Notifications",
+                        text = "View your Notifications",
                         fontSize = 14.sp,
                         color = Color.White.copy(alpha = 0.8f)
                     )
@@ -125,24 +122,7 @@ fun AdminDashboard(navController: NavController) {
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Cards Grid
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                AdminFeatureCard(
-                    title = "Register Student",
-                    imageRes = R.drawable.register,
-                    onClick = { navController.navigate("ROUT_ADD_STUDENT") }
-                )
-                AdminFeatureCard(
-                    title = "Fees Mgmt",
-                    imageRes = R.drawable.fees,
-                    onClick = { navController.navigate("fees_management") }
-                )
-            }
 
-            Spacer(modifier = Modifier.height(20.dp))
 
 
             Row(
@@ -152,13 +132,9 @@ fun AdminDashboard(navController: NavController) {
                 AdminFeatureCard(
                     title = "Notifications",
                     imageRes = R.drawable.notification,
-                    onClick = { navController.navigate(ROUT_UPLOAD_CONTENT) }
+                    onClick = { navController.navigate(ROUT_VIEW_CONTENT) }
                 )
-                AdminFeatureCard(
-                    title = "View registered Students",
-                    imageRes = R.drawable.register,
-                    onClick = {  navController.navigate("ROUT_STUDENT_LIST") }
-                )
+
             }
 
 
@@ -170,7 +146,7 @@ fun AdminDashboard(navController: NavController) {
 }
 
 @Composable
-fun AdminFeatureCard(title: String, imageRes: Int, onClick: () -> Unit) {
+fun ParentFeatureCard(title: String, imageRes: Int, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .width(160.dp)
@@ -208,6 +184,6 @@ fun AdminFeatureCard(title: String, imageRes: Int, onClick: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun AdminDashboardPreview() {
-    AdminDashboard(navController = rememberNavController())
+fun ParentDashboardPreview() {
+   ParentDashboard(navController = rememberNavController())
 }

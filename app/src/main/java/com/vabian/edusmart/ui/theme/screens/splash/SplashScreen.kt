@@ -51,10 +51,10 @@ fun SplashScreen(navController: NavController) {
 
         // Logo or Hero Image
         Image(
-            painter = painterResource(id = R.drawable.img_1), // Replace with your educational image/logo
+            painter = painterResource(id = R.drawable.img_3), // Replace with your educational image/logo
             contentDescription = "EduSmart Logo",
             modifier = Modifier
-                .size(220.dp)
+                .size(260.dp)
                 .clip(RoundedCornerShape(16.dp)),
             contentScale = ContentScale.Crop
         )
