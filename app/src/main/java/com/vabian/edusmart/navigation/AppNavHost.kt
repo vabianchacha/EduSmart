@@ -6,9 +6,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.vabian.edusmart.data.ContentDatabase
 import com.vabian.edusmart.data.UserDatabase
 import com.vabian.edusmart.repository.ContentRepository
@@ -22,6 +24,7 @@ import com.vabian.edusmart.ui.theme.screens.home.HomeScreen
 import com.vabian.edusmart.ui.theme.screens.intent.IntentScreen
 import com.vabian.edusmart.ui.theme.screens.item.ItemScreen
 import com.vabian.edusmart.ui.theme.screens.more.MoreScreen
+import com.vabian.edusmart.ui.theme.screens.notificaton.AdminViewScreen
 import com.vabian.edusmart.ui.theme.screens.notificaton.UploadContentScreen
 import com.vabian.edusmart.ui.theme.screens.notificaton.ViewContentScreen
 import com.vabian.edusmart.ui.theme.screens.outh.LoginScreen
@@ -30,8 +33,12 @@ import com.vabian.edusmart.ui.theme.screens.service.ServiceScreen
 import com.vabian.edusmart.ui.theme.screens.splash.LoadingScreen
 import com.vabian.edusmart.ui.theme.screens.splash.SplashScreen
 import com.vabian.edusmart.ui.theme.screens.start.StartScreen
+import com.vabian.edusmart.ui.theme.screens.student.AddProductScreen
+import com.vabian.edusmart.ui.theme.screens.student.EditProductScreen
+import com.vabian.edusmart.ui.theme.screens.student.ProductListScreen
 import com.vabian.edusmart.viewmodel.AuthViewModel
 import com.vabian.edusmart.viewmodel.ContentViewModel
+import com.vabian.edusmart.viewmodel.ProductViewModel
 
 
 @Composable
@@ -39,6 +46,8 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUT_SPLASH,
+    productViewModel: ProductViewModel = viewModel(),
+
 
 
 
@@ -60,9 +69,7 @@ fun AppNavHost(
         composable(ROUT_ABOUT) {
             AboutScreen(navController)
         }
-        composable(ROUT_CONTACT) {
-            ContactScreen(navController)
-        }
+
         composable(ROUT_DASHBOARD) {
             DashboardScreen(navController)
         }
@@ -89,6 +96,9 @@ fun AppNavHost(
         }
         composable(ROUT_PARENTDASHBOARD) {
             ParentDashboard(navController)
+        }
+        composable(ROUT_CONTACT) {
+            ContactScreen(navController)
         }
 
         composable(ROUT_SERVICE) {
@@ -132,10 +142,38 @@ fun AppNavHost(
             UploadContentScreen(navController, contentViewModel)
         }
         composable(ROUT_VIEW_CONTENT) {
-            ViewContentScreen(navController, contentViewModel) { id ->
+            ViewContentScreen(navController, contentViewModel)
+
+        }
+        composable(ROUT_ADMIN_VIEW) {
+            AdminViewScreen(navController, contentViewModel) { id ->
                 navController.navigate("upload_content?id=$id")
             }
         }
+
+
+
+
+        // PRODUCTS
+        composable(ROUT_ADD_PRODUCT) {
+            AddProductScreen(navController, productViewModel)
+        }
+        composable(ROUT_PRODUCT_LIST) {
+            ProductListScreen(navController, productViewModel)
+        }
+
+
+
+        composable(
+            route = ROUT_EDIT_PRODUCT,
+            arguments = listOf(navArgument("productId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getInt("productId")
+            if (productId != null) {
+                EditProductScreen(productId, navController, productViewModel)
+            }
+        }
+
 
 
 

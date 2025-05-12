@@ -3,7 +3,6 @@ package com.vabian.edusmart.navigation
 const val ROUT_HOME = "home"
 const val ROUT_ABOUT = "about"
 const val ROUT_CONTACT = "contact"
-
 const val ROUT_REGISTER = "register"
 const val ROUT_LOGIN = "login"
 
@@ -23,16 +22,18 @@ const val ROUT_PARENTDASHBOARD = "parent"
 //Content
 const val ROUT_UPLOAD_CONTENT = "upload_content"
 const val ROUT_VIEW_CONTENT = "view_content"
+const val ROUT_ADMIN_VIEW = "admin_content"
 
 
 
-//student
 
-const val ROUT_ADD_STUDENT = "add_student"
-const val ROUT_STUDENT_LIST = "student_list"
-const val ROUT_EDIT_STUDENT = "edit_student/{admissionNumber}"
+//Products6
 
+const val ROUT_ADD_PRODUCT = "add_product"
+const val ROUT_PRODUCT_LIST = "product_list"
+const val ROUT_EDIT_PRODUCT = "edit_product/{productId}"
 
 // ✅ Helper function for navigation
-fun editStudentRoute(admissionNumber: Int) = "edit_student/$admissionNumber"
+fun editProductRoute(productId: Int) = "edit_product/$productId"
+
 

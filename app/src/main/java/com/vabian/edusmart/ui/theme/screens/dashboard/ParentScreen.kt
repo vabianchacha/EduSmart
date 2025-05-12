@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vabian.edusmart.R
+import com.vabian.edusmart.navigation.ROUT_ABOUT
+import com.vabian.edusmart.navigation.ROUT_CONTACT
 import com.vabian.edusmart.navigation.ROUT_HOME
 import com.vabian.edusmart.navigation.ROUT_REGISTER
 import com.vabian.edusmart.navigation.ROUT_VIEW_CONTENT
@@ -53,21 +55,21 @@ fun ParentDashboard(navController: NavController) {
                     }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Register") },
-                    label = { Text("Register") },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Contact") },
+                    label = { Text("Contact") },
                     selected = selectedItem == 1,
                     onClick = {
                         selectedItem = 1
-                        navController.navigate(ROUT_REGISTER)
+                        navController.navigate(ROUT_CONTACT)
                     }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Notifications, contentDescription = "Notifications") },
-                    label = { Text("Notify") },
+                    icon = { Icon(Icons.Default.Info, contentDescription = "About") },
+                    label = { Text("About") },
                     selected = selectedItem == 2,
                     onClick = {
                         selectedItem = 2
-                        navController.navigate("notification_management")
+                        navController.navigate(ROUT_ABOUT)
                     }
                 )
             }

@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vabian.edusmart.R
 import com.vabian.edusmart.navigation.ROUT_HOME
+import com.vabian.edusmart.navigation.ROUT_REGISTER
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,8 +56,9 @@ fun StartScreen(navController: NavController) {
             NavigationBar(containerColor = Color(0xFF3FB645)) {
                 NavigationBarItem(
                     selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 },
-                    icon = { Icon(Icons.Default.Home, contentDescription = ROUT_HOME) },
+                    onClick = { selectedTab = 0
+                        navController.navigate(ROUT_HOME)},
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                     label = { Text("Home") }
                 )
                 NavigationBarItem(
@@ -67,9 +69,11 @@ fun StartScreen(navController: NavController) {
                 )
                 NavigationBarItem(
                     selected = selectedTab == 2,
-                    onClick = { selectedTab = 2 },
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Account") },
-                    label = { Text("Account") }
+                    onClick = { selectedTab = 2
+                        navController.navigate(ROUT_REGISTER)
+                              },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Register") },
+                    label = { Text("Register") }
                 )
             }
         }

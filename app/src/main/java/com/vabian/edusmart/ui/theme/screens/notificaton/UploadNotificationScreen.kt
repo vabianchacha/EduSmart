@@ -19,10 +19,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.vabian.edusmart.model.Content
+import com.vabian.edusmart.navigation.ROUT_ADMIN_VIEW
+import com.vabian.edusmart.navigation.ROUT_HOME
+import com.vabian.edusmart.navigation.ROUT_SERVICE
 import com.vabian.edusmart.viewmodel.ContentViewModel
 import java.util.Calendar
 
@@ -54,6 +56,7 @@ fun UploadContentScreen(
     // Form fields
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
 
     // Load existing content if editing
     LaunchedEffect(editingContentId) {
@@ -64,14 +67,17 @@ fun UploadContentScreen(
 
     // Collect the content to be edited
     val editingContent = contentViewModel.selectedContent.collectAsState().value
+    val context = LocalContext.current
 
     // Populate form if editing
     LaunchedEffect(editingContent) {
         editingContent?.let {
             title = it.title
             description = it.description
+
         }
     }
+
 
     Scaffold(
         topBar = {
@@ -83,42 +89,39 @@ fun UploadContentScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.LightGray,
+                    containerColor = Color.Green,
                     titleContentColor = Color.White,
                     navigationIconContentColor = Color.White
                 )
             )
         },
         bottomBar = {
-            NavigationBar(containerColor = Color.LightGray) {
+            NavigationBar(containerColor = Color.Green) {
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                     label = { Text("Home") },
                     selected = selectedIndex == 0,
-                    onClick = { selectedIndex = 0 }
+                    onClick = { selectedIndex = 0
+                        navController.navigate(ROUT_HOME)
+                    }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
                     label = { Text("Favorites") },
                     selected = selectedIndex == 1,
-                    onClick = { selectedIndex = 1 }
+                    onClick = { selectedIndex =1}
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-                    label = { Text("Profile") },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Service") },
+                    label = { Text("Service") },
                     selected = selectedIndex == 2,
-                    onClick = { selectedIndex = 2 }
+                    onClick = { selectedIndex = 2
+                        navController.navigate(ROUT_SERVICE)
+                    }
                 )
             }
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* Add new action */ },
-                containerColor = Color.LightGray
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        }
+
     ) { paddingValues ->
         // Scrollable content
         LazyColumn(
@@ -129,15 +132,6 @@ fun UploadContentScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            // Title input
-            item {
-                OutlinedTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = { Text("Hello, Dear Parent!") },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
 
 
             // Notification input
@@ -149,9 +143,6 @@ fun UploadContentScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-
-
-
 
 
             // Section heading
@@ -183,6 +174,7 @@ fun UploadContentScreen(
                 Button(
 
                     onClick = {
+
                         val content = Content(
                             id = editingContent?.id ?: 0,
                             title = title,
@@ -195,7 +187,7 @@ fun UploadContentScreen(
                         } else {
                             contentViewModel.insert(content)
                         }
-                        navController.popBackStack()
+                        navController.navigate(ROUT_ADMIN_VIEW)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(Color.Green)
@@ -203,7 +195,12 @@ fun UploadContentScreen(
                 {
                     Text("Send Notification")
                 }
+
+
+
             }
+
         }
     }
+
 }

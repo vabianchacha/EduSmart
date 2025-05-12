@@ -24,12 +24,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vabian.edusmart.R
-import com.vabian.edusmart.navigation.ROUT_ADD_STUDENT
 import com.vabian.edusmart.navigation.ROUT_HOME
+import com.vabian.edusmart.navigation.ROUT_MORE
 import com.vabian.edusmart.navigation.ROUT_REGISTER
-import com.vabian.edusmart.navigation.ROUT_STUDENT_LIST
+import com.vabian.edusmart.navigation.ROUT_SERVICE
 import com.vabian.edusmart.navigation.ROUT_UPLOAD_CONTENT
-import com.vabian.edusmart.navigation.ROUT_VIEW_CONTENT
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,21 +55,21 @@ fun AdminDashboard(navController: NavController) {
                     }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Register") },
-                    label = { Text("Register") },
+                    icon = { Icon(Icons.Default.ShoppingCart, contentDescription = "Service") },
+                    label = { Text("Service") },
                     selected = selectedItem == 1,
                     onClick = {
                         selectedItem = 1
-                        navController.navigate(ROUT_REGISTER)
+                        navController.navigate(ROUT_SERVICE)
                     }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Notifications, contentDescription = "Notifications") },
-                    label = { Text("Notify") },
+                    icon = { Icon(Icons.Default.MoreVert, contentDescription = "More") },
+                    label = { Text("More") },
                     selected = selectedItem == 2,
                     onClick = {
                         selectedItem = 2
-                        navController.navigate("notification_management")
+                        navController.navigate(ROUT_MORE)
                     }
                 )
             }

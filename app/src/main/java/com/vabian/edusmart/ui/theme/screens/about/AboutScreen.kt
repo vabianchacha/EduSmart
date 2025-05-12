@@ -20,7 +20,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.vabian.edusmart.R
+import com.vabian.edusmart.navigation.ROUT_ABOUT
 import com.vabian.edusmart.navigation.ROUT_HOME
+import com.vabian.edusmart.navigation.ROUT_REGISTER
+import com.vabian.edusmart.navigation.ROUT_SERVICE
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,15 +55,19 @@ fun AboutScreen(navController: NavController) {
                 )
                 NavigationBarItem(
                     selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 },
+                    onClick = { selectedTab = 1
+                        navController.navigate(ROUT_ABOUT)
+                              },
                     icon = { Icon(Icons.Default.Info, contentDescription = "About") },
                     label = { Text("About") }
                 )
                 NavigationBarItem(
                     selected = selectedTab == 2,
-                    onClick = { selectedTab = 2 },
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Account") },
-                    label = { Text("Account") }
+                    onClick = { selectedTab = 2
+                        navController.navigate(ROUT_REGISTER)
+                              },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Register") },
+                    label = { Text("Register") }
                 )
             }
         }

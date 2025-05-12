@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.vabian.edusmart.navigation.ROUT_HOME
+import com.vabian.edusmart.navigation.ROUT_MORE
 
 data class Item(val name: String)
 
@@ -33,8 +35,8 @@ fun ItemScreen(navController: NavController) {
         Item("Books"),
         Item("Uniforms"),
         Item("Lab Equipment"),
-        Item("Sports Gear"),
-        Item("Art Supplies")
+        Item("Track suit"),
+        Item("Sport sues")
     )
 
     Scaffold(
@@ -109,7 +111,7 @@ fun BottomNavigationBar(navController: NavController) {
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") },
             selected = false,
-            onClick = { navController.navigate("home") }
+            onClick = { navController.navigate(ROUT_HOME) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
@@ -121,7 +123,7 @@ fun BottomNavigationBar(navController: NavController) {
             icon = { Icon(Icons.Default.MoreVert, contentDescription = "More") },
             label = { Text("More") },
             selected = false,
-            onClick = { navController.navigate("more") }
+            onClick = { navController.navigate(ROUT_MORE) }
         )
     }
 }

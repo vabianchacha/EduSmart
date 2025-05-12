@@ -27,19 +27,19 @@ import com.vabian.edusmart.viewmodel.ContentViewModel
 
 import kotlinx.coroutines.delay
 
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun ViewContentScreen(
+fun AdminViewScreen(
     navController: NavController,
     contentViewModel: ContentViewModel,
-
+    onEdit: (Int) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf(0) }
     val contentList by contentViewModel.allContent.collectAsState(initial = emptyList())
 
     // Auto-slide carousel logic
-    val carouselImages = listOf(R.drawable.img_3, R.drawable.img_9, R.drawable.img_7,
-        R.drawable.img_6,R.drawable.img_8,R.drawable.img_5,)
+    val carouselImages = listOf(R.drawable.img, R.drawable.img_2, R.drawable.img_1)
     var currentImageIndex by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
@@ -89,7 +89,14 @@ fun ViewContentScreen(
             }
         },
 
-
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate("upload_content") },
+                containerColor = Color.LightGray
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -119,15 +126,7 @@ fun ViewContentScreen(
                 )
             }
 
-
-
-
-
             // Content Grid Section
-
-
-            var selectedContent by remember { mutableStateOf<Content?>(null) }
-
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = Modifier.fillMaxSize(),
@@ -136,13 +135,12 @@ fun ViewContentScreen(
             ) {
                 items(contentList.size) { index ->
                     val content = contentList[index]
-                    val backgroundColor = if (index % 2 == 0) Color.LightGray else Color(0xFFBCD9DC)
+                    val backgroundColor = if (index % 2 == 0) Color.LightGray else Color(0xFFD0E8F2) // Light Blue
 
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(180.dp)
-                            .clickable { selectedContent = content }, // 👈 Make card clickable
+                            .height(180.dp), // 👈 uniform card height
                         elevation = CardDefaults.cardElevation(4.dp),
                         colors = CardDefaults.cardColors(containerColor = backgroundColor)
                     ) {
@@ -150,58 +148,38 @@ fun ViewContentScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(12.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
+                            verticalArrangement = Arrangement.SpaceBetween // 👈 balance content vertically
                         ) {
                             Column {
                                 Text(
-                                    text = "Hello, Dear Parent!: ${content.title}",
+                                    text = "Title: ${content.title}",
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Text(
-                                    text = " ${content.description}",
+                                    text = "Description: ${content.description}",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    maxLines = 3
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-
-
-            if (selectedContent != null) {
-                Dialog(onDismissRequest = { selectedContent = null }) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        color = Color.White,
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp),
-                            verticalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = selectedContent?.title ?: "",
-                                    style = MaterialTheme.typography.titleLarge
-                                )
-                                Spacer(modifier = Modifier.height(10.dp))
-                                Text(
-                                    text = selectedContent?.description ?: "",
-                                    style = MaterialTheme.typography.bodyLarge
+                                    maxLines = 3 // 👈 optional: keep things neat
                                 )
                             }
 
-                            Button(
-                                onClick = { selectedContent = null },
-                                modifier = Modifier.align(Alignment.End)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
                             ) {
-                                Text("Close")
+                                IconButton(onClick = { onEdit(content.id) }) {
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        contentDescription = "Edit",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                                IconButton(onClick = { contentViewModel.delete(content) }) {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = "Delete",
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
+                                }
                             }
                         }
                     }

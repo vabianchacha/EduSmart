@@ -32,8 +32,6 @@ import com.vabian.edusmart.R
 import com.vabian.edusmart.navigation.ROUT_ADMINDASHBOARD
 import com.vabian.edusmart.navigation.ROUT_PARENTDASHBOARD
 import com.vabian.edusmart.navigation.ROUT_REGISTER
-import com.vabian.edusmart.navigation.ROUT_STUDENT_LIST
-import com.vabian.edusmart.navigation.ROUT_VIEW_CONTENT
 import com.vabian.edusmart.viewmodel.AuthViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
